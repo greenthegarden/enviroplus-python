@@ -9,19 +9,7 @@ import argparse
 import ST7735
 import time
 import ssl
-from bme280 import BME280
-from pms5003 import PMS5003, ReadTimeoutError, SerialTimeoutError
-from enviroplus import gas
 
-try:
-    # Transitional fix for breaking change in LTR559
-    from ltr559 import LTR559
-
-    ltr559 = LTR559()
-except ImportError:
-    import ltr559
-
-from subprocess import PIPE, Popen, check_output
 from PIL import Image, ImageDraw, ImageFont
 from fonts.ttf import RobotoMedium as UserFont
 import json
@@ -34,8 +22,6 @@ try:
 except ImportError:
     from smbus import SMBus
 
-# home assistant integration
-from HaMqtt import MQTTDevice, MQTTSensor
 
 DEFAULT_MQTT_BROKER_IP = "emqx.home-assistant.localdomain"
 DEFAULT_MQTT_BROKER_PORT = 1883
@@ -56,68 +42,6 @@ def on_connect(client, userdata, flags, rc):
 
 def on_publish(client, userdata, mid):
     print("mid: " + str(mid))
-
-dev = {
-    "identifiers": ["enviropi-bedroom"],
-    "name": "Enviro+",
-    "manufacturer": "Pimoroni"
-}
-
-# Instantiate sensors
-bme280_sensors = {}
-bme280_sensors["temperature"] = MQTTSensor("Thermometer 1", "temp1", client, "°C", "temperature", device_dict=dev)
-bme280_sensors["pressure"] = MQTTSensor("Pressure", "pressure",
-                                        client, "°C", "pressure", device_dict=dev)
-bme280_sensors["humidity"] = MQTTSensor(
-    "Humidity", "humidity", client, "%", "humidity", device_dict=dev)
-bme280_sensors["lux"] = MQTTSensor("Light", "light",
-                                   client, "lux", "light", device_dict=dev)
-
-# Read values from BME280 and return as dict
-def read_bme280(bme280):
-    # Compensation factor for temperature
-    comp_factor = 2.25
-    values = {}
-    cpu_temp = get_cpu_temperature()
-    raw_temp = bme280.get_temperature()  # float
-    comp_temp = raw_temp - ((cpu_temp - raw_temp) / comp_factor)
-    values["temperature"] = int(comp_temp)
-    values["pressure"] = round(
-        int(bme280.get_pressure() * 100), -1
-    )  # round to nearest 10
-    values["humidity"] = int(bme280.get_humidity())
-    data = gas.read_all()
-    values["oxidised"] = int(data.oxidising / 1000)
-    values["reduced"] = int(data.reducing / 1000)
-    values["nh3"] = int(data.nh3 / 1000)
-    values["lux"] = int(ltr559.get_lux())
-    return values
-
-
-# Read values PMS5003 and return as dict
-def read_pms5003(pms5003):
-    values = {}
-    try:
-        pm_values = pms5003.read()  # int
-        values["pm1"] = pm_values.pm_ug_per_m3(1)
-        values["pm25"] = pm_values.pm_ug_per_m3(2.5)
-        values["pm10"] = pm_values.pm_ug_per_m3(10)
-    except ReadTimeoutError:
-        pms5003.reset()
-        pm_values = pms5003.read()
-        values["pm1"] = pm_values.pm_ug_per_m3(1)
-        values["pm25"] = pm_values.pm_ug_per_m3(2.5)
-        values["pm10"] = pm_values.pm_ug_per_m3(10)
-    return values
-
-
-# Get CPU temperature to use for compensation
-def get_cpu_temperature():
-    process = Popen(
-        ["vcgencmd", "measure_temp"], stdout=PIPE, universal_newlines=True
-    )
-    output, _error = process.communicate()
-    return float(output[output.index("=") + 1:output.rindex("'")])
 
 
 # Get Raspberry Pi serial number to use as ID

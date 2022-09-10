@@ -82,12 +82,20 @@ def homeassistant_init(client):
                                     client, "lux", "illuminance", device_dict=dev)
     
     for sensor in bme280_sensors:
-        sensor.send_discovery()
+        bme280_sensors[sensor].send_discovery()
 
     return bme280_sensors
 
 def homeassistant_publish(sensors, values):
+    print("Publish {} to {}".format(values.get(
+        "temperature", 0.0), sensors.get("temperature")))
     sensors.get("temperature").publish_state(values.get("temperature", 0.0))
+
+
+def homeassistant_close(sensors):
+    print("Close sensors")
+    for sensor in sensors:
+        sensors[sensor].close()
     
 # Read values from BME280 and return as dict
 def read_bme280(bme280):
@@ -302,9 +310,13 @@ def main():
             homeassistant_publish(sensors, values)
             display_status(disp, args.broker)
             time.sleep(args.interval)
+        except KeyboardInterrupt:
+            disp.set_backlight(0)
+            pass
         except Exception as e:
             print(e)
         finally:
+            homeassistant_close(sensors)
             mqtt_client.loop_stop()
             mqtt_client.disconnect()
 
