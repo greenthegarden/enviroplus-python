@@ -37,7 +37,7 @@ except ImportError:
 # home assistant integration
 from HaMqtt import MQTTDevice, MQTTSensor
 
-DEFAULT_MQTT_BROKER_IP = "emqx.home-assistant.localdomain"
+DEFAULT_MQTT_BROKER_IP = "localhost"
 DEFAULT_MQTT_BROKER_PORT = 1883
 DEFAULT_MQTT_TOPIC = "enviroplus"
 DEFAULT_READ_INTERVAL = 5
@@ -66,19 +66,19 @@ def homeassistant_init(client):
 
     # Instantiate sensors
     bme280_sensors = {}
-    bme280_sensors["temperature"] = MQTTSensor("Thermometer 1", "temp1", client, "°C", "temperature", device_dict=dev)
-    bme280_sensors["pressure"] = MQTTSensor("Pressure", "pressure",
+    bme280_sensors["temperature"] = MQTTSensor.MQTTSensor("Thermometer 1", "temp1", client, "°C", "temperature", device_dict=dev)
+    bme280_sensors["pressure"] = MQTTSensor.MQTTSensor("Pressure", "pressure",
                                             client, "°C", "pressure", device_dict=dev)
-    bme280_sensors["humidity"] = MQTTSensor(
+    bme280_sensors["humidity"] = MQTTSensor.MQTTSensor(
         "Humidity", "humidity", client, "%", "humidity", device_dict=dev)
-    bme280_sensors["oxidised"] = MQTTSensor(
+    bme280_sensors["oxidised"] = MQTTSensor.MQTTSensor(
         "Oxidised", "oxidised", client, "ppm", "None", device_dict=dev)
-    bme280_sensors["reduced"] = MQTTSensor("Reduced", "reduced",
+    bme280_sensors["reduced"] = MQTTSensor.MQTTSensor("Reduced", "reduced",
                                             client, "ppm", "None", device_dict=dev)
-    bme280_sensors["nh3"] = MQTTSensor(
+    bme280_sensors["nh3"] = MQTTSensor.MQTTSensor(
         "nh3", "nh3", client, "ppm", "None", device_dict=dev)
 
-    bme280_sensors["lux"] = MQTTSensor("Light", "light",
+    bme280_sensors["lux"] = MQTTSensor.MQTTSensor("Light", "light",
                                     client, "lux", "illuminance", device_dict=dev)
     
     for sensor in bme280_sensors:
@@ -310,15 +310,8 @@ def main():
             homeassistant_publish(sensors, values)
             display_status(disp, args.broker)
             time.sleep(args.interval)
-        except KeyboardInterrupt:
-            disp.set_backlight(0)
-            pass
         except Exception as e:
             print(e)
-        finally:
-            homeassistant_close(sensors)
-            mqtt_client.loop_stop()
-            mqtt_client.disconnect()
 
 
 if __name__ == "__main__":
