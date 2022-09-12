@@ -73,11 +73,11 @@ def homeassistant_init(client):
     bme280_sensors["humidity"] = MQTTSensor.MQTTSensor(
         "Humidity", "enviropi_1_humidity", client, "%", "humidity", unique_id="enviropi_1_humidity", device_dict=dev)
     bme280_sensors["oxidised"] = MQTTSensor.MQTTSensor(
-        "Oxidised", "enviropi_1_oxidised", client, "ppm", "None", unique_id="enviropi_1_oxidised", device_dict=dev)
+        "Oxidised", "enviropi_1_oxidised", client, "ppm", None, unique_id="enviropi_1_oxidised", device_dict=dev)
     bme280_sensors["reduced"] = MQTTSensor.MQTTSensor(
-        "Reduced", "enviropi_1_reduced", client, "ppm", "None", unique_id="enviropi_1_reduced", device_dict=dev)
+        "Reduced", "enviropi_1_reduced", client, "ppm", None, unique_id="enviropi_1_reduced", device_dict=dev)
     bme280_sensors["nh3"] = MQTTSensor.MQTTSensor(
-        "nh3", "enviropi_1_nh3", client, "ppm", "None", unique_id="enviropi_1_nh3", device_dict=dev)
+        "nh3", "enviropi_1_nh3", client, "ppm", None, unique_id="enviropi_1_nh3", device_dict=dev)
     bme280_sensors["lux"] = MQTTSensor.MQTTSensor(
         "Light", "enviropi_1_light", client, "lux", "illuminance", unique_id="enviropi_1_lux", device_dict=dev)
     
@@ -87,10 +87,13 @@ def homeassistant_init(client):
     return bme280_sensors
 
 def homeassistant_publish(sensors, values):
-    print("Publish {} to {}".format(values.get(
-        "temperature", 0.0), sensors.get("temperature")))
     sensors.get("temperature").publish_state(values.get("temperature", 0.0))
-
+    sensors.get("pressure").publish_state(values.get("pressure", 0.0))
+    sensors.get("humidity").publish_state(values.get("humidity", 0.0))
+    sensors.get("oxidised").publish_state(values.get("oxidised", 0.0))
+    sensors.get("reduced").publish_state(values.get("reduced", 0.0))
+    sensors.get("nh3").publish_state(values.get("nh3", 0.0))
+    sensors.get("lux").publish_state(values.get("lux", 0.0))
 
 def homeassistant_close(sensors):
     print("Close sensors")
