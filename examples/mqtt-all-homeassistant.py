@@ -66,20 +66,20 @@ def homeassistant_init(client):
 
     # Instantiate sensors
     bme280_sensors = {}
-    bme280_sensors["temperature"] = MQTTSensor(
+    bme280_sensors["temperature"] = MQTTSensor.MQTTSensor(
         "Temperature", "enviropi_1_temperature", client, "°C", "temperature", unique_id="enviropi_1_pressure", device_dict=dev)
-    bme280_sensors["pressure"] = MQTTSensor("Pressure", "enviropi_1_pressure",
+    bme280_sensors["pressure"] = MQTTSensor.MQTTSensor("Pressure", "enviropi_1_pressure",
                                             client, "Pa", "pressure", unique_id="enviropi_1_pressure", device_dict=dev)
-    bme280_sensors["humidity"] = MQTTSensor(
+    bme280_sensors["humidity"] = MQTTSensor.MQTTSensor(
         "Humidity", "enviropi_1_humidity", client, "%", "humidity", unique_id="enviropi_1_humidity", device_dict=dev)
-    bme280_sensors["oxidised"] = MQTTSensor(
+    bme280_sensors["oxidised"] = MQTTSensor.MQTTSensor(
         "Oxidised", "enviropi_1_oxidised", client, "ppm", "None", unique_id="enviropi_1_oxidised", device_dict=dev)
-    bme280_sensors["reduced"] = MQTTSensor("Reduced", "enviropi_1_reduced",
+    bme280_sensors["reduced"] = MQTTSensor.MQTTSensor("Reduced", "enviropi_1_reduced",
                                            client, "ppm", "None", unique_id="enviropi_1_reduced", device_dict=dev)
-    bme280_sensors["nh3"] = MQTTSensor(
+    bme280_sensors["nh3"] = MQTTSensor.MQTTSensor(
         "nh3", "enviropi_1_nh3", client, "ppm", "None", unique_id="enviropi_1_nh3", device_dict=dev)
 
-    bme280_sensors["lux"] = MQTTSensor("Light", "enviropi_1_light",
+    bme280_sensors["lux"] = MQTTSensor.MQTTSensor("Light", "enviropi_1_light",
                                        client, "lux", "illuminance", unique_id="enviropi_1_lux", device_dict=dev)
     
     for sensor in bme280_sensors:
