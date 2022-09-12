@@ -37,7 +37,8 @@ except ImportError:
 # home assistant integration
 from HaMqtt import MQTTDevice, MQTTSensor
 
-DEFAULT_MQTT_BROKER_IP = "emqx.home-assistant.localdomain"
+# DEFAULT_MQTT_BROKER_IP = "emqx.home-assistant.localdomain"
+DEFAULT_MQTT_BROKER_IP = "192.168.1.132"
 DEFAULT_MQTT_BROKER_PORT = 1883
 DEFAULT_MQTT_TOPIC = "enviroplus"
 DEFAULT_READ_INTERVAL = 5
@@ -59,27 +60,28 @@ def on_publish(client, userdata, mid):
 
 def homeassistant_init(client):
     dev = {
-        "identifiers": ["enviropi-bedroom"],
+        "identifiers": ["enviropi-1"],
         "name": "Enviro+",
         "manufacturer": "Pimoroni"
     }
 
     # Instantiate sensors
     bme280_sensors = {}
-    bme280_sensors["temperature"] = MQTTSensor("Thermometer 1", "temp1", client, "°C", "temperature", device_dict=dev)
-    bme280_sensors["pressure"] = MQTTSensor("Pressure", "pressure",
-                                            client, "°C", "pressure", device_dict=dev)
+    bme280_sensors["temperature"] = MQTTSensor(
+        "Temperature", "enviropi_1_temperature", client, "°C", "temperature", unique_id="enviropi_1_pressure", device_dict=dev)
+    bme280_sensors["pressure"] = MQTTSensor("Pressure", "enviropi_1_pressure",
+                                            client, "Pa", "pressure", unique_id="enviropi_1_pressure", device_dict=dev)
     bme280_sensors["humidity"] = MQTTSensor(
-        "Humidity", "humidity", client, "%", "humidity", device_dict=dev)
+        "Humidity", "enviropi_1_humidity", client, "%", "humidity", unique_id="enviropi_1_humidity", device_dict=dev)
     bme280_sensors["oxidised"] = MQTTSensor(
-        "Oxidised", "oxidised", client, "ppm", "None", device_dict=dev)
-    bme280_sensors["reduced"] = MQTTSensor("Reduced", "reduced",
-                                            client, "ppm", "None", device_dict=dev)
+        "Oxidised", "enviropi_1_oxidised", client, "ppm", "None", unique_id="enviropi_1_oxidised", device_dict=dev)
+    bme280_sensors["reduced"] = MQTTSensor("Reduced", "enviropi_1_reduced",
+                                           client, "ppm", "None", unique_id="enviropi_1_reduced", device_dict=dev)
     bme280_sensors["nh3"] = MQTTSensor(
-        "nh3", "nh3", client, "ppm", "None", device_dict=dev)
+        "nh3", "enviropi_1_nh3", client, "ppm", "None", unique_id="enviropi_1_nh3", device_dict=dev)
 
-    bme280_sensors["lux"] = MQTTSensor("Light", "light",
-                                    client, "lux", "illuminance", device_dict=dev)
+    bme280_sensors["lux"] = MQTTSensor("Light", "enviropi_1_light",
+                                       client, "lux", "illuminance", unique_id="enviropi_1_lux", device_dict=dev)
     
     for sensor in bme280_sensors:
         bme280_sensors[sensor].send_discovery()
@@ -315,7 +317,7 @@ def main():
             pass
         except Exception as e:
             print(e)
-        finally:
+i#        finally:
             homeassistant_close(sensors)
             mqtt_client.loop_stop()
             mqtt_client.disconnect()
