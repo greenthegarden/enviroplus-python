@@ -73,11 +73,11 @@ def homeassistant_init(client):
     bme280_sensors["humidity"] = MQTTSensor.MQTTSensor(
         "Humidity", "enviropi_1_humidity", client, "%", "humidity", unique_id="enviropi_1_humidity", device_dict=dev)
     bme280_sensors["oxidised"] = MQTTSensor.MQTTSensor(
-        "Oxidised", "enviropi_1_oxidised", client, "ppm", None, unique_id="enviropi_1_oxidised", device_dict=dev)
+        "Oxidised", "enviropi_1_oxidised", client, "ppm", "nitrous_oxide", unique_id="enviropi_1_oxidised", device_dict=dev)
     bme280_sensors["reduced"] = MQTTSensor.MQTTSensor(
-        "Reduced", "enviropi_1_reduced", client, "ppm", None, unique_id="enviropi_1_reduced", device_dict=dev)
+        "Reduced", "enviropi_1_reduced", client, "ppm", "carbon_monoxide", unique_id="enviropi_1_reduced", device_dict=dev)
     bme280_sensors["nh3"] = MQTTSensor.MQTTSensor(
-        "nh3", "enviropi_1_nh3", client, "ppm", None, unique_id="enviropi_1_nh3", device_dict=dev)
+        "nh3", "enviropi_1_nh3", client, "ppm", "volatile_organic_compounds, unique_id="enviropi_1_nh3", device_dict=dev)
     bme280_sensors["lux"] = MQTTSensor.MQTTSensor(
         "Light", "enviropi_1_light", client, "lux", "illuminance", unique_id="enviropi_1_lux", device_dict=dev)
     
