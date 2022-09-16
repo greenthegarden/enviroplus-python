@@ -67,19 +67,19 @@ def homeassistant_init(client):
     # Instantiate sensors
     bme280_sensors = {}
     bme280_sensors["temperature"] = MQTTSensor.MQTTSensor(
-        "Temperature", "enviropi_1_temperature", client, "°C", "temperature", unique_id="enviropi_1_temperature", device_dict=dev)
+        "Enviro+ 1 Temperature", "enviro+_1_temperature", client, "°C", "temperature", unique_id="enviropi_1_temperature", device_dict=dev)
     bme280_sensors["pressure"] = MQTTSensor.MQTTSensor(
-        "Pressure", "enviropi_1_pressure", client, "Pa", "pressure", unique_id="enviropi_1_pressure", device_dict=dev)
+        "Enviro+ 1 Pressure", "enviro+_1_pressure", client, "Pa", "pressure", unique_id="enviropi_1_pressure", device_dict=dev)
     bme280_sensors["humidity"] = MQTTSensor.MQTTSensor(
-        "Humidity", "enviropi_1_humidity", client, "%", "humidity", unique_id="enviropi_1_humidity", device_dict=dev)
+        "Enviro+ 1 Humidity", "enviro+_1_humidity", client, "%", "humidity", unique_id="enviropi_1_humidity", device_dict=dev)
     bme280_sensors["oxidised"] = MQTTSensor.MQTTSensor(
-        "Oxidised", "enviropi_1_oxidised", client, "ppm", "nitrous_oxide", unique_id="enviropi_1_oxidised", device_dict=dev)
+        "Enviro+ 1 Oxidised", "enviro+_1_oxidised", client, "ppm", "nitrous_oxide", unique_id="enviropi_1_oxidised", device_dict=dev)
     bme280_sensors["reduced"] = MQTTSensor.MQTTSensor(
-        "Reduced", "enviropi_1_reduced", client, "ppm", "carbon_monoxide", unique_id="enviropi_1_reduced", device_dict=dev)
+        "Enviro+ 1 Reduced", "enviro+_1_reduced", client, "ppm", "carbon_monoxide", unique_id="enviropi_1_reduced", device_dict=dev)
     bme280_sensors["nh3"] = MQTTSensor.MQTTSensor(
-        "nh3", "enviropi_1_nh3", client, "ppm", "volatile_organic_compounds, unique_id="enviropi_1_nh3", device_dict=dev)
+        "Enviro+ 1 nh3", "enviro+_1_nh3", client, "ppm", "volatile_organic_compounds", unique_id="enviropi_1_nh3", device_dict=dev)
     bme280_sensors["lux"] = MQTTSensor.MQTTSensor(
-        "Light", "enviropi_1_light", client, "lux", "illuminance", unique_id="enviropi_1_lux", device_dict=dev)
+        "Enviro+ 1 Light", "enviro+_1_light", client, "lux", "illuminance", unique_id="enviropi_1_lux", device_dict=dev)
     
     for sensor in bme280_sensors:
         bme280_sensors[sensor].send_discovery()
@@ -108,7 +108,7 @@ def read_bme280(bme280):
     cpu_temp = get_cpu_temperature()
     raw_temp = bme280.get_temperature()  # float
     comp_temp = raw_temp - ((cpu_temp - raw_temp) / comp_factor)
-    values["temperature"] = int(comp_temp)
+    values["temperature"] = round(comp_temp, 1)
     values["pressure"] = round(
         int(bme280.get_pressure() * 100), -1
     )  # round to nearest 10
