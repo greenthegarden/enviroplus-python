@@ -87,13 +87,23 @@ def homeassistant_init(client):
     return enviroplus_sensors
 
 def homeassistant_publish(sensors, values):
-    sensors.get("temperature").publish_state(values.get("temperature", 0.0))
-    sensors.get("pressure").publish_state(values.get("pressure", 0.0))
-    sensors.get("humidity").publish_state(values.get("humidity", 0.0))
-    sensors.get("oxidised").publish_state(values.get("oxidised", 0.0))
-    sensors.get("reduced").publish_state(values.get("reduced", 0.0))
-    sensors.get("nh3").publish_state(values.get("nh3", 0.0))
-    sensors.get("lux").publish_state(values.get("lux", 0.0))
+    if (type(sensors) is dict) and (type(values) is dict):
+        for key, value in sensors.items():
+            print("type for key" + key + " is " + type(key))
+            # sensors.get(key).publish_state(values.get("temperature", 0.0))
+        # print("Published temperature")
+        # sensors.get("pressure").publish_state(values.get("pressure", 0.0))
+        # print("Published pressure")
+        # sensors.get("humidity").publish_state(values.get("humidity", 0.0))
+        # print("Published humidity")
+        # sensors.get("oxidised").publish_state(values.get("oxidised", 0.0))
+        # print("Published oxidised")
+        # sensors.get("reduced").publish_state(values.get("reduced", 0.0))
+        # print("Published reduced")
+        # sensors.get("nh3").publish_state(values.get("nh3", 0.0))
+        # print("Published nh3")
+        # sensors.get("lux").publish_state(values.get("lux", 0.0))
+        # print("Published lux")
 
 def homeassistant_close(sensors):
     print("Close sensors")
