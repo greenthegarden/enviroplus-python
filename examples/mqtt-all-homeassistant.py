@@ -34,6 +34,8 @@ try:
 except ImportError:
     from smbus import SMBus
 
+import sys
+
 # home assistant integration
 from HaMqtt import MQTTDevice, MQTTSensor
 
@@ -313,6 +315,7 @@ def main():
             time.sleep(args.interval)
         except KeyboardInterrupt:
             homeassistant_close(sensors)
+            sys.exit()
         except Exception as e:
             print(e)
 
