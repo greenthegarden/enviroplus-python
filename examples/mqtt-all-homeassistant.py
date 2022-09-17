@@ -67,19 +67,19 @@ def homeassistant_init(client):
     # Instantiate sensors
     bme280_sensors = {}
     bme280_sensors["temperature"] = MQTTSensor.MQTTSensor(
-        "Enviro 1 Temperature", "enviro_1_temperature", client, "°C", "temperature", unique_id="enviropi_1_temperature", device_dict=dev)
+        "Enviro+ 1 Temperature", "enviroplus_1_temperature", client, "°C", "temperature", unique_id="enviroplus_1_temperature", device_dict=dev)
     bme280_sensors["pressure"] = MQTTSensor.MQTTSensor(
-        "Enviro 1 Pressure", "enviro_1_pressure", client, "Pa", "pressure", unique_id="enviropi_1_pressure", device_dict=dev)
+        "Enviro+ 1 Pressure", "enviroplus_1_pressure", client, "Pa", "pressure", unique_id="enviroplus_1_pressure", device_dict=dev)
     bme280_sensors["humidity"] = MQTTSensor.MQTTSensor(
-        "Enviro 1 Humidity", "enviro_1_humidity", client, "%", "humidity", unique_id="enviropi_1_humidity", device_dict=dev)
+        "Enviro+ 1 Humidity", "enviroplus_1_humidity", client, "%", "humidity", unique_id="enviroplus_1_humidity", device_dict=dev)
     bme280_sensors["oxidised"] = MQTTSensor.MQTTSensor(
-        "Enviro 1 Oxidised", "enviro_1_oxidised", client, "ppm", "nitrous_oxide", unique_id="enviropi_1_oxidised", device_dict=dev)
+        "Enviro+ 1 Oxidised", "enviroplus_1_oxidised", client, "ppm", "nitrous_oxide", unique_id="enviroplus_1_oxidised", device_dict=dev)
     bme280_sensors["reduced"] = MQTTSensor.MQTTSensor(
-        "Enviro 1 Reduced", "enviro_1_reduced", client, "ppm", "carbon_monoxide", unique_id="enviropi_1_reduced", device_dict=dev)
+        "Enviro+ 1 Reduced", "enviroplus_1_reduced", client, "ppm", "carbon_monoxide", unique_id="enviroplus_1_reduced", device_dict=dev)
     bme280_sensors["nh3"] = MQTTSensor.MQTTSensor(
-        "Enviro 1 nh3", "enviro_1_nh3", client, "ppm", "volatile_organic_compounds", unique_id="enviropi_1_nh3", device_dict=dev)
+        "Enviro+ 1 nh3", "enviroplus_1_nh3", client, "ppm", "volatile_organic_compounds", unique_id="enviroplus_1_nh3", device_dict=dev)
     bme280_sensors["lux"] = MQTTSensor.MQTTSensor(
-        "Enviro 1 Light", "enviro_1_light", client, "lux", "illuminance", unique_id="enviropi_1_lux", device_dict=dev)
+        "Enviro+ 1 Light", "enviroplus_1_light", client, "lux", "illuminance", unique_id="enviroplus_1_light", device_dict=dev)
     
     for sensor in bme280_sensors:
         bme280_sensors[sensor].send_discovery()
