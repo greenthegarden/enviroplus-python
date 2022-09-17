@@ -58,6 +58,7 @@ def on_publish(client, userdata, mid):
     print("mid: " + str(mid))
 
 def homeassistant_init(client):
+    print("Initialise Home Assistant configuration")
     dev = {
         "identifiers": ["enviropi-1"],
         "name": "Enviro+",
@@ -65,45 +66,32 @@ def homeassistant_init(client):
     }
 
     # Instantiate sensors
-    enviroplus_sensors = {}
-    enviroplus_sensors["temperature"] = MQTTSensor.MQTTSensor(
+    enviroplus_measurements = {}
+    enviroplus_measurements["temperature"] = MQTTSensor.MQTTSensor(
         "Enviroplus 1 Temperature", "enviroplus_1_temperature", client, "°C", "temperature", unique_id="enviroplus_1_temperature", device_dict=dev)
-    enviroplus_sensors["pressure"] = MQTTSensor.MQTTSensor(
+    enviroplus_measurements["pressure"] = MQTTSensor.MQTTSensor(
         "Enviroplus 1 Pressure", "enviroplus_1_pressure", client, "Pa", "pressure", unique_id="enviroplus_1_pressure", device_dict=dev)
-    enviroplus_sensors["humidity"] = MQTTSensor.MQTTSensor(
+    enviroplus_measurements["humidity"] = MQTTSensor.MQTTSensor(
         "Enviroplus 1 Humidity", "enviroplus_1_humidity", client, "%", "humidity", unique_id="enviroplus_1_humidity", device_dict=dev)
-    enviroplus_sensors["oxidised"] = MQTTSensor.MQTTSensor(
+    enviroplus_measurements["oxidised"] = MQTTSensor.MQTTSensor(
         "Enviroplus 1 Oxidised", "enviroplus_1_oxidised", client, "ppm", "nitrous_oxide", unique_id="enviroplus_1_oxidised", device_dict=dev)
-    enviroplus_sensors["reduced"] = MQTTSensor.MQTTSensor(
+    enviroplus_measurements["reduced"] = MQTTSensor.MQTTSensor(
         "Enviroplus 1 Reduced", "enviroplus_1_reduced", client, "ppm", "carbon_monoxide", unique_id="enviroplus_1_reduced", device_dict=dev)
-    enviroplus_sensors["nh3"] = MQTTSensor.MQTTSensor(
+    enviroplus_measurements["nh3"] = MQTTSensor.MQTTSensor(
         "Enviroplus 1 nh3", "enviroplus_1_nh3", client, "ppm", "volatile_organic_compounds", unique_id="enviroplus_1_nh3", device_dict=dev)
-    enviroplus_sensors["lux"] = MQTTSensor.MQTTSensor(
+    enviroplus_measurements["lux"] = MQTTSensor.MQTTSensor(
         "Enviroplus 1 Light", "enviroplus_1_light", client, "lux", "illuminance", unique_id="enviroplus_1_light", device_dict=dev)
     
-    for sensor in enviroplus_sensors:
-        enviroplus_sensors[sensor].send_discovery()
+    for sensor in enviroplus_measurements:
+        enviroplus_measurements[sensor].send_discovery()
 
-    return enviroplus_sensors
+    return enviroplus_measurements
 
 def homeassistant_publish(sensors, values):
     if (type(sensors) is dict) and (type(values) is dict):
-        for key, value in sensors.items():
-            print("type for key" + key + " is " + type(key))
-            # sensors.get(key).publish_state(values.get("temperature", 0.0))
-        # print("Published temperature")
-        # sensors.get("pressure").publish_state(values.get("pressure", 0.0))
-        # print("Published pressure")
-        # sensors.get("humidity").publish_state(values.get("humidity", 0.0))
-        # print("Published humidity")
-        # sensors.get("oxidised").publish_state(values.get("oxidised", 0.0))
-        # print("Published oxidised")
-        # sensors.get("reduced").publish_state(values.get("reduced", 0.0))
-        # print("Published reduced")
-        # sensors.get("nh3").publish_state(values.get("nh3", 0.0))
-        # print("Published nh3")
-        # sensors.get("lux").publish_state(values.get("lux", 0.0))
-        # print("Published lux")
+        for key in sensors:
+            print("Publish " + key) #+ " is " + type(key))
+            sensors.get(key).publish_state(values.get(key, 0.0))
 
 def homeassistant_close(sensors):
     print("Close sensors")
@@ -323,6 +311,8 @@ def main():
             homeassistant_publish(sensors, values)
             display_status(disp, args.broker)
             time.sleep(args.interval)
+        except KeyboardInterrupt:
+            homeassistant_close(sensors)
         except Exception as e:
             print(e)
 
