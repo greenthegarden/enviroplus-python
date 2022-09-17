@@ -65,26 +65,26 @@ def homeassistant_init(client):
     }
 
     # Instantiate sensors
-    bme280_sensors = {}
-    bme280_sensors["temperature"] = MQTTSensor.MQTTSensor(
-        "Enviro 1 Temperature", "enviroplus_1_temperature", client, "°C", "temperature", unique_id="enviroplus_1_temperature", device_dict=dev)
-    bme280_sensors["pressure"] = MQTTSensor.MQTTSensor(
-        "Enviro 1 Pressure", "enviroplus_1_pressure", client, "Pa", "pressure", unique_id="enviroplus_1_pressure", device_dict=dev)
-    bme280_sensors["humidity"] = MQTTSensor.MQTTSensor(
-        "Enviro 1 Humidity", "enviroplus_1_humidity", client, "%", "humidity", unique_id="enviroplus_1_humidity", device_dict=dev)
-    bme280_sensors["oxidised"] = MQTTSensor.MQTTSensor(
-        "Enviro 1 Oxidised", "enviroplus_1_oxidised", client, "ppm", "nitrous_oxide", unique_id="enviroplus_1_oxidised", device_dict=dev)
-    bme280_sensors["reduced"] = MQTTSensor.MQTTSensor(
-        "Enviro 1 Reduced", "enviroplus_1_reduced", client, "ppm", "carbon_monoxide", unique_id="enviroplus_1_reduced", device_dict=dev)
-    bme280_sensors["nh3"] = MQTTSensor.MQTTSensor(
-        "Enviro 1 nh3", "enviroplus_1_nh3", client, "ppm", "volatile_organic_compounds", unique_id="enviroplus_1_nh3", device_dict=dev)
-    bme280_sensors["lux"] = MQTTSensor.MQTTSensor(
-        "Enviro 1 Light", "enviroplus_1_light", client, "lux", "illuminance", unique_id="enviroplus_1_light", device_dict=dev)
+    enviroplus_sensors = {}
+    enviroplus_sensors["temperature"] = MQTTSensor.MQTTSensor(
+        "Enviroplus 1 Temperature", "enviroplus_1_temperature", client, "°C", "temperature", unique_id="enviroplus_1_temperature", device_dict=dev)
+    enviroplus_sensors["pressure"] = MQTTSensor.MQTTSensor(
+        "Enviroplus 1 Pressure", "enviroplus_1_pressure", client, "Pa", "pressure", unique_id="enviroplus_1_pressure", device_dict=dev)
+    enviroplus_sensors["humidity"] = MQTTSensor.MQTTSensor(
+        "Enviroplus 1 Humidity", "enviroplus_1_humidity", client, "%", "humidity", unique_id="enviroplus_1_humidity", device_dict=dev)
+    enviroplus_sensors["oxidised"] = MQTTSensor.MQTTSensor(
+        "Enviroplus 1 Oxidised", "enviroplus_1_oxidised", client, "ppm", "nitrous_oxide", unique_id="enviroplus_1_oxidised", device_dict=dev)
+    enviroplus_sensors["reduced"] = MQTTSensor.MQTTSensor(
+        "Enviroplus 1 Reduced", "enviroplus_1_reduced", client, "ppm", "carbon_monoxide", unique_id="enviroplus_1_reduced", device_dict=dev)
+    enviroplus_sensors["nh3"] = MQTTSensor.MQTTSensor(
+        "Enviroplus 1 nh3", "enviroplus_1_nh3", client, "ppm", "volatile_organic_compounds", unique_id="enviroplus_1_nh3", device_dict=dev)
+    enviroplus_sensors["lux"] = MQTTSensor.MQTTSensor(
+        "Enviroplus 1 Light", "enviroplus_1_light", client, "lux", "illuminance", unique_id="enviroplus_1_light", device_dict=dev)
     
-    for sensor in bme280_sensors:
-        bme280_sensors[sensor].send_discovery()
+    for sensor in enviroplus_sensors:
+        enviroplus_sensors[sensor].send_discovery()
 
-    return bme280_sensors
+    return enviroplus_sensors
 
 def homeassistant_publish(sensors, values):
     sensors.get("temperature").publish_state(values.get("temperature", 0.0))
@@ -239,7 +239,7 @@ def main():
     device_id = "raspi-" + device_serial_number
 
     print(
-        f"""mqtt-all.py - Reads Enviro plus data and sends over mqtt.
+        f"""mqtt-all.py - Reads Enviroplus data and sends over mqtt.
 
     broker: {args.broker}
     client_id: {device_id}
